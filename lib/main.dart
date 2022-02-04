@@ -61,17 +61,37 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                   return const Text('Что то пошло не так');
                 }),
+            const SizedBox(
+              height: 100,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FloatingActionButton(
+                    heroTag: 'decrement',
+                    onPressed: () {
+                      counterBloc.add(DecrementEvent());
+                      // setState(() {});
+                    },
+                    tooltip: 'Decrement',
+                    child: const Icon(Icons.exposure_minus_1),
+                  ),
+                  FloatingActionButton(
+                    heroTag: 'increment',
+                    onPressed: () {
+                      counterBloc.add(IncrementEvent());
+                      // setState(() {});
+                    },
+                    tooltip: 'Increment',
+                    child: const Icon(Icons.add),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'increment',
-        onPressed: () {
-          counterBloc.add(IncrementEvent());
-          // setState(() {});
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
