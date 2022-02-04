@@ -33,10 +33,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final incrementBloc = CounterBlock();
+  final counterBloc = CounterBlock();
 
   @override
   Widget build(BuildContext context) {
+    print('Build Screen Again');
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -50,22 +51,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             BlocBuilder<CounterBlock, CounterState>(
-                bloc: incrementBloc,
+                bloc: counterBloc,
                 builder: (context, state) {
-                  if (state is IncrementState) {
+                  if (state is CounterStateValue) {
                     return Text(
                       state.count.toString(),
                       style: const TextStyle(fontSize: 25),
                     );
                   }
-                  return const Text('0');
+                  return const Text('Что то пошло не так');
                 }),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'increment',
         onPressed: () {
-          incrementBloc.add(IncrementEvent());
+          counterBloc.add(IncrementEvent());
+          // setState(() {});
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),

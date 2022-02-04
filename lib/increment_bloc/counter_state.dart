@@ -1,6 +1,6 @@
 abstract class CounterState {}
 
-class IncrementState extends CounterState {
+class CounterStateValue extends CounterState {
   int count;
-  IncrementState({required this.count});
+  CounterStateValue({required this.count});
 }
