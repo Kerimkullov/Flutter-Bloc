@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:practice_bloc/increment_bloc/increment_bloc.dart';
-import 'package:practice_bloc/increment_bloc/increment_event.dart';
-import 'package:practice_bloc/increment_bloc/increment_state.dart';
+import 'package:practice_bloc/increment_bloc/counter_bloc.dart';
+import 'package:practice_bloc/increment_bloc/counter_event.dart';
+import 'package:practice_bloc/increment_bloc/counter_state.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final incrementBloc = IncrementBloc();
+  final incrementBloc = CounterBlock();
 
   @override
   Widget build(BuildContext context) {
@@ -48,20 +48,24 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            BlocBuilder<IncrementBloc, IncrementState>(
+            const SizedBox(height: 20),
+            BlocBuilder<CounterBlock, CounterState>(
                 bloc: incrementBloc,
                 builder: (context, state) {
-                  if (state is IncrementStateValue) {
-                    return Text(state.count.toString());
+                  if (state is IncrementState) {
+                    return Text(
+                      state.count.toString(),
+                      style: const TextStyle(fontSize: 25),
+                    );
                   }
-                  return Text('0');
+                  return const Text('0');
                 }),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          incrementBloc.add(IncrementValue());
+          incrementBloc.add(IncrementEvent());
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
