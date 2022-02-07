@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Rebuil all Screen');
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -48,23 +49,41 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            BlocBuilder<AnimatedContainerBlock, AnimatedContainerState>(
-                bloc: containerBlock,
-                builder: (context, state) {
-                  if (state is AnimatedContainerStateValue) {
-                    return AnimatedContainer(
-                      height: state.height,
-                      width: state.width,
-                      curve: Curves.easeInOutBack,
-                      duration: const Duration(seconds: 1),
-                      decoration: BoxDecoration(
-                        color: state.containerColor,
-                        borderRadius: BorderRadius.circular(16),
+            BlocListener<AnimatedContainerBlock, AnimatedContainerState>(
+              bloc: containerBlock,
+              listener: (context, state) {
+                print('BlocListener PRINT');
+                if (state is AnimatedContainerStateValue) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SeconPage(
+                        containerColor: state.containerColor.toString(),
                       ),
-                    );
-                  }
-                  return const Text('Что то пошло не так');
-                })
+                    ),
+                  );
+                }
+              },
+              child:
+                  BlocBuilder<AnimatedContainerBlock, AnimatedContainerState>(
+                      bloc: containerBlock,
+                      builder: (context, state) {
+                        if (state is AnimatedContainerStateValue) {
+                          print('BLOCBUILDER PRINT');
+                          return AnimatedContainer(
+                            height: state.height,
+                            width: state.width,
+                            curve: Curves.easeInOutBack,
+                            duration: const Duration(seconds: 1),
+                            decoration: BoxDecoration(
+                              color: state.containerColor,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          );
+                        }
+                        return const Text('Что то пошло не так');
+                      }),
+            ),
           ],
         ),
       ),
@@ -74,6 +93,20 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         tooltip: 'Generate',
         child: const Icon(Icons.replay),
+      ),
+    );
+  }
+}
+
+class SeconPage extends StatelessWidget {
+  const SeconPage({Key? key, required this.containerColor}) : super(key: key);
+  final String containerColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text(containerColor),
       ),
     );
   }
