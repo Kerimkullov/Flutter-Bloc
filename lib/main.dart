@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:practice_bloc/increment_bloc/counter_bloc.dart';
@@ -33,11 +35,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final counterBloc = CounterBlock();
+  final random = Random();
+  double height = 200;
+  double width = 200;
+  Color containerColor = const Color.fromRGBO(256, 203, 230, 0.5);
 
   @override
   Widget build(BuildContext context) {
-    print('Build Screen Again');
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -46,52 +50,30 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            const SizedBox(height: 20),
-            BlocBuilder<CounterBlock, CounterState>(
-                bloc: counterBloc,
-                builder: (context, state) {
-                  if (state is CounterStateValue) {
-                    return Text(
-                      state.count.toString(),
-                      style: const TextStyle(fontSize: 25),
-                    );
-                  }
-                  return const Text('Что то пошло не так');
-                }),
-            const SizedBox(
-              height: 100,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  FloatingActionButton(
-                    heroTag: 'decrement',
-                    onPressed: () {
-                      counterBloc.add(DecrementEvent());
-                      // setState(() {});
-                    },
-                    tooltip: 'Decrement',
-                    child: const Icon(Icons.exposure_minus_1),
-                  ),
-                  FloatingActionButton(
-                    heroTag: 'increment',
-                    onPressed: () {
-                      counterBloc.add(IncrementEvent());
-                      // setState(() {});
-                    },
-                    tooltip: 'Increment',
-                    child: const Icon(Icons.add),
-                  ),
-                ],
+            AnimatedContainer(
+              height: height,
+              width: width,
+              curve: Curves.bounceIn,
+              duration: const Duration(seconds: 1),
+              decoration: BoxDecoration(
+                color: containerColor,
+                borderRadius: BorderRadius.circular(16),
               ),
-            ),
+            )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            height = random.nextInt(300).toDouble();
+            width = random.nextInt(300).toDouble();
+            containerColor = Color.fromRGBO(random.nextInt(256),
+                random.nextInt(256), random.nextInt(256), 0.5);
+          });
+        },
+        tooltip: 'Generate',
+        child: const Icon(Icons.replay),
       ),
     );
   }
