@@ -2,9 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:practice_bloc/increment_bloc/counter_bloc.dart';
-import 'package:practice_bloc/increment_bloc/counter_event.dart';
-import 'package:practice_bloc/increment_bloc/counter_state.dart';
+import 'package:practice_bloc/animated_container_bloc/animated_container_event.dart';
+import 'package:practice_bloc/animated_container_bloc/animated_container_state.dart';
+
+import 'animated_container_bloc/animated_container_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,10 +36,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final random = Random();
-  double height = 200;
-  double width = 200;
-  Color containerColor = const Color.fromRGBO(256, 203, 230, 0.5);
+  final AnimatedContainerBlock containerBlock = AnimatedContainerBlock();
 
   @override
   Widget build(BuildContext context) {
@@ -50,27 +48,29 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            AnimatedContainer(
-              height: height,
-              width: width,
-              curve: Curves.bounceIn,
-              duration: const Duration(seconds: 1),
-              decoration: BoxDecoration(
-                color: containerColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-            )
+            BlocBuilder<AnimatedContainerBlock, AnimatedContainerState>(
+                bloc: containerBlock,
+                builder: (context, state) {
+                  if (state is AnimatedContainerStateValue) {
+                    return AnimatedContainer(
+                      height: state.height,
+                      width: state.width,
+                      curve: Curves.easeInOutBack,
+                      duration: const Duration(seconds: 1),
+                      decoration: BoxDecoration(
+                        color: state.containerColor,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    );
+                  }
+                  return const Text('Что то пошло не так');
+                })
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            height = random.nextInt(300).toDouble();
-            width = random.nextInt(300).toDouble();
-            containerColor = Color.fromRGBO(random.nextInt(256),
-                random.nextInt(256), random.nextInt(256), 0.5);
-          });
+          containerBlock.add(ChangeContainerBehavior());
         },
         tooltip: 'Generate',
         child: const Icon(Icons.replay),
