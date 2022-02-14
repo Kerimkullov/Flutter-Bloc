@@ -12,15 +12,19 @@ class AnimatedContainerBlock
       : super(AnimatedContainerStateValue(
             height: 200, width: 200, containerColor: Colors.grey)) {
     final random = Random();
-    on<ChangeContainerBehavior>(
-      (event, emit) => emit(
-        AnimatedContainerStateValue(
-          height: random.nextInt(300).toDouble(),
-          width: random.nextInt(300).toDouble(),
-          containerColor: Color.fromRGBO(random.nextInt(256),
-              random.nextInt(256), random.nextInt(256), 0.5),
+    try {
+      on<ChangeContainerBehavior>(
+        (event, emit) => emit(
+          AnimatedContainerStateValue(
+            height: random.nextInt(300).toDouble(),
+            width: random.nextInt(300).toDouble(),
+            containerColor: Color.fromRGBO(random.nextInt(256),
+                random.nextInt(256), random.nextInt(256), 0.5),
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      throw AnimatedContainerErrorState(e.toString());
+    }
   }
 }

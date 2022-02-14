@@ -1,11 +1,5 @@
-import 'dart:math';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:practice_bloc/animated_container_bloc/animated_container_event.dart';
-import 'package:practice_bloc/animated_container_bloc/animated_container_state.dart';
-
-import 'animated_container_bloc/animated_container_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,80 +30,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final AnimatedContainerBlock containerBlock = AnimatedContainerBlock();
+  String response = 'test';
+
+  void getUser() async {
+    try {
+      Response data =
+          await Dio().get('https://jsonplaceholder.typicode.com/users/1');
+
+      print(data);
+
+      response = data.data['email'];
+
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('Rebuil all Screen');
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            BlocProvider(
-              create: (context) => containerBlock,
-              child:
-                  BlocConsumer<AnimatedContainerBlock, AnimatedContainerState>(
-                      builder: (context, state) {
-                if (state is AnimatedContainerStateValue) {
-                  print('BLOCBUILDER PRINT');
-                  return Column(
-                    children: [
-                      AnimatedContainer(
-                        height: state.height,
-                        width: state.width,
-                        curve: Curves.easeInOutBack,
-                        duration: const Duration(seconds: 1),
-                        decoration: BoxDecoration(
-                          color: state.containerColor,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      const SizedBox(height: 50),
-                      SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: BlocProvider.value(
-                          value: containerBlock,
-                          child: SeconPage(),
-                        ),
-                      )
-                    ],
-                  );
-                }
-                return const Text('Что то пошло не так');
-              }, listener: (context, state) {
-                if (state is AnimatedContainerStateValue) {
-                  print('BlocListener PRINT');
-                }
-              }),
-            ),
-          ],
-        ),
+        child: Text(response),
       ),
-    );
-  }
-}
-
-class SeconPage extends StatelessWidget {
-  SeconPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: FloatingActionButton(
-          onPressed: () {
-            context
-                .read<AnimatedContainerBlock>()
-                .add(ChangeContainerBehavior());
-          },
-          tooltip: 'Generate',
-          child: const Icon(Icons.replay),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          getUser();
+        },
+        child: const Icon(Icons.get_app),
       ),
     );
   }

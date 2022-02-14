@@ -12,3 +12,8 @@ class AnimatedContainerStateValue extends AnimatedContainerState {
     required this.containerColor,
   });
 }
+
+class AnimatedContainerErrorState extends AnimatedContainerState {
+  String message;
+  AnimatedContainerErrorState(this.message);
+}
